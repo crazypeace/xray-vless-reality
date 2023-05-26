@@ -60,7 +60,7 @@ else
 fi
 
 # x25519公私钥
-tmp_key=$(xray x25519 | sed 's/.*://')
+tmp_key=($(xray x25519 | sed 's/.*://'))
 private_key=${tmp_key[0]}
 public_key=${tmp_key[1]}
 
