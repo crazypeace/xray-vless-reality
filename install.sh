@@ -70,6 +70,9 @@ v2ray_id=$(echo $public_key | head -c 16 | xargs xray uuid -i)
 # 目标网站
 domain="www.microsoft.com"
 
+# 指纹 Fingerprint
+fingerprint="random"
+
 # 配置config.json
 cat > /usr/local/etc/xray/config.json <<-EOF
 {
@@ -147,12 +150,15 @@ echo -e "$yellow 流控 (Flow) = ${cyan}xtls-rprx-vision${none}"
 echo -e "$yellow 加密 (Encryption) = ${cyan}none${none}"
 echo -e "$yellow 传输协议 (Network) = ${cyan}tcp$none"
 echo -e "$yellow 伪装类型 (header type) = ${cyan}none$none"
-echo -e "$yellow 伪装域名 (host) = ${cyan}$none"
-echo -e "$yellow 路径 (path) = ${cyan}$none"
 echo -e "$yellow 底层传输安全 (TLS) = ${cyan}reality$none"
+echo -e "$yellow SNI = ${cyan}$domain$none"
+echo -e "$yellow Fingerprint = ${cyan}$fingerprint$none"
+echo -e "$yellow PublicKey = ${cyan}${public_key}$none"
+echo -e "$yellow ShortId = ${cyan}$none"
+echo -e "$yellow SpiderX = ${cyan}$none"
 echo
 echo "---------- VLESS Reality URL ----------"
-vless_reality_url="vless://${v2ray_id}@${ip}:443?encryption=none&flow=xtls-rprx-vision&security=reality&sni=${domain}&fp=random&pbk=${public_key}type=tcp#VLESS_R_${ip}"
+vless_reality_url="vless://${v2ray_id}@${ip}:443?encryption=none&flow=xtls-rprx-vision&security=reality&sni=${domain}&fp=${fingerprint}&pbk=${public_key}&type=tcp#VLESS_R_${ip}"
 echo -e "${cyan}${vless_reality_url}${none}"
 echo
 sleep 3
