@@ -35,6 +35,13 @@ pause
 apt update
 apt install -y curl sudo gawk jq qrencode
 
+# 打开BBR
+sed -i '/net.ipv4.tcp_congestion_control/d' /etc/sysctl.conf
+sed -i '/net.core.default_qdisc/d' /etc/sysctl.conf
+echo "net.ipv4.tcp_congestion_control = bbr" >>/etc/sysctl.conf
+echo "net.core.default_qdisc = fq" >>/etc/sysctl.conf
+sysctl -p >/dev/null 2>&1
+
 # Xray官方安装脚本
 echo
 echo -e "${yellow}Xray官方安装脚本$none"
