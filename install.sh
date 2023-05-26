@@ -34,7 +34,7 @@ pause
 
 # 准备工作
 apt update
-apt install -y curl sudo jq qrencode
+apt install -y curl sudo gawk jq qrencode
 
 # Xray官方安装脚本
 echo
@@ -60,9 +60,9 @@ else
 fi
 
 # x25519公私钥
-tmp_key=($(xray x25519 | sed 's/.*://'))
-private_key=${tmp_key[0]}
-public_key=${tmp_key[1]}
+tmp_key=$(xray x25519)
+private_key=$(echo ${tmp_key} | awk '{print $3}')
+public_key=$(echo ${tmp_key} | awk '{print $6}')
 
 # v2ray UUID
 v2ray_id=$(echo $public_key | head -c 16 | xargs xray uuid -i)
