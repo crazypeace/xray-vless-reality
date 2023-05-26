@@ -87,7 +87,7 @@ cat > /usr/local/etc/xray/config.json <<-EOF
             "settings": {
                 "clients": [
                     {
-                        "id": "$uuid", # ***uuid
+                        "id": "$v2ray_id", # ***uuid
                         "flow": "xtls-rprx-vision"
                     }
                 ],
