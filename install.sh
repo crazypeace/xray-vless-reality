@@ -214,7 +214,7 @@ echo -e "$yellow ShortId = ${cyan}$none"
 echo -e "$yellow SpiderX = ${cyan}$none"
 echo
 echo "---------- VLESS Reality URL ----------"
-vless_reality_url="vless://${xray_id/}@${ip}:443?encryption=none&flow=xtls-rprx-vision&security=reality&sni=${domain}&fp=${fingerprint}&pbk=${public_key}&type=tcp#VLESS_R_${ip}"
+vless_reality_url="vless://${xray_id}@${ip}:443?encryption=none&flow=xtls-rprx-vision&security=reality&sni=${domain}&fp=${fingerprint}&pbk=${public_key}&type=tcp#VLESS_R_${ip}"
 echo -e "${cyan}${vless_reality_url}${none}"
 echo
 sleep 3
