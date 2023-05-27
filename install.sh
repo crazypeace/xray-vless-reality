@@ -33,7 +33,7 @@ pause
 
 # 准备工作
 apt update
-apt install -y curl sudo gawk jq qrencode
+apt install -y curl sudo jq qrencode
 
 # 打开BBR
 sed -i '/net.ipv4.tcp_congestion_control/d' /etc/sysctl.conf
@@ -42,9 +42,9 @@ echo "net.ipv4.tcp_congestion_control = bbr" >>/etc/sysctl.conf
 echo "net.core.default_qdisc = fq" >>/etc/sysctl.conf
 sysctl -p >/dev/null 2>&1
 
-# Xray官方安装脚本
+# Xray官方脚本 安装 Xray beta 版本
 echo
-echo -e "${yellow}Xray官方安装脚本$none"
+echo -e "${yellow}官方脚本安装 Xray beta 版本$none"
 echo "----------------------------------------------------------------"
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install --beta
 
@@ -107,17 +107,13 @@ cat > /usr/local/etc/xray/config.json <<-EOF
           "dest": "$domain:443",    // ***
           "xver": 0,
           "serverNames": ["$domain"],    // ***
-          "privateKey": "$private_key",    // ***
+          "privateKey": "$private_key",    // ***私钥
           "shortIds": [""]    // ***
         }
       },
       "sniffing": {
         "enabled": true,
-        "destOverride": [
-          "http",
-          "tls",
-          "quic"
-        ]
+        "destOverride": ["http", "tls", "quic"]
       }
     }
   ],
@@ -212,8 +208,8 @@ echo -e "$yellow 传输协议 (Network) = ${cyan}tcp$none"
 echo -e "$yellow 伪装类型 (header type) = ${cyan}none$none"
 echo -e "$yellow 底层传输安全 (TLS) = ${cyan}reality$none"
 echo -e "$yellow SNI = ${cyan}$domain$none"
-echo -e "$yellow Fingerprint = ${cyan}$fingerprint$none"
-echo -e "$yellow PublicKey = ${cyan}${public_key}$none"
+echo -e "$yellow 指纹 (Fingerprint) = ${cyan}$fingerprint$none"
+echo -e "$yellow 公钥 (PublicKey) = ${cyan}${public_key}$none"
 echo -e "$yellow ShortId = ${cyan}$none"
 echo -e "$yellow SpiderX = ${cyan}$none"
 echo
