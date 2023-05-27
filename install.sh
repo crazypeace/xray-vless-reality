@@ -115,7 +115,8 @@ cat > /usr/local/etc/xray/config.json <<-EOF
         "enabled": true,
         "destOverride": [
           "http",
-          "tls"
+          "tls",
+          "quic"
         ]
       }
     }
