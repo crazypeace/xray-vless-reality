@@ -3,10 +3,6 @@ Xray, VLESS_Reality模式
 
 Reality底层是TCP直连，如果你的VPS已经被墙，那肯定用不了。出门左转 https://github.com/crazypeace/v2ray_wss
 
-# 说明 
-这个一键脚本超级简单。有效语句8行(其中BBR 5行, 安装Xray 1行, 生成x25519公私钥 1行，生成UUID 1行)+Xray配置文件69行(其中你需要修改4行), 其它都是用来检验小白输入错误参数或者搭建条件不满足的。
-
-你如果不放心开源的脚本，你可以自己执行那8行有效语句，再修改配置文件中的4行，也能达到一样的效果。
 
 # 一键执行
 ```
@@ -16,6 +12,12 @@ apt install -y curl
 ```
 bash <(curl -L https://github.com/crazypeace/xray-vless-reality/raw/main/install.sh)
 ```
+
+
+# 说明 
+这个一键脚本超级简单。有效语句8行(其中BBR 5行, 安装Xray 1行, 生成x25519公私钥 1行，生成UUID 1行)+Xray配置文件69行(其中你需要修改4行), 其它都是用来检验小白输入错误参数或者搭建条件不满足的。
+
+你如果不放心开源的脚本，你可以自己执行那8行有效语句，再修改配置文件中的4行，也能达到一样的效果。
 
 
 # 打开BBR
