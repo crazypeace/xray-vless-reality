@@ -29,18 +29,73 @@ echo -e "$yellow此脚本仅兼容于Debian 10+系统. 如果你的系统不符�
 echo -e "可以去 ${cyan}https://github.com/crazypeace/xray-vless-reality${none} 查看脚本整体思路和关键命令, 以便针对你自己的系统做出调整."
 echo -e "有问题加群 ${cyan}https://t.me/+ISuvkzFGZPBhMzE1${none}"
 echo "----------------------------------------------------------------"
+
+# 执行脚本带参数
+if [ $# -ge 1 ]; then
+    # 第1个参数是搭在ipv4还是ipv6上
+    case ${1} in
+    4)
+        netstack=4
+        ip=$(curl -4s https://www.cloudflare.com/cdn-cgi/trace | grep ip= | sed -e "s/ip=//g")
+        ;;
+    6)
+        netstack=6
+        ip=$(curl -6s https://www.cloudflare.com/cdn-cgi/trace | grep ip= | sed -e "s/ip=//g")
+        ;;    
+    *) # initial
+        ip=$(curl -s https://www.cloudflare.com/cdn-cgi/trace | grep ip= | sed -e "s/ip=//g")
+        if [[ -z $(echo -n ${ip} | sed -E 's/([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})//g') ]]; then
+          netstack=4
+        else
+          netstack=6
+        fi
+        ;;    
+    esac
+
+    #第2个参数是port
+    port=${2}
+    if [[ -z $port ]]; then
+      port=443
+    fi
+
+    #第3个参数是UUID
+    uuid=${3}
+    if [[ -z "$uuid" ]]; then
+        uuid=$(cat /proc/sys/kernel/random/uuid)
+    fi
+
+    #私钥种子
+    private_key=$(echo -n ${uuid} | md5sum | head -c 32 | base64 -w 0 | tr '+/' '-_' | tr -d '=')
+
+    #生成私钥公钥
+    tmp_key=$(echo -n ${private_key} | xargs xray x25519 -i)
+    private_key=$(echo ${tmp_key} | awk '{print $3}')
+    public_key=$(echo ${tmp_key} | awk '{print $6}')
+
+    #ShortID
+    shortid=$(echo -n ${uuid} | sha1sum | head -c 16)
+
+    # 第4个参数是域名
+    domain=${4}
+    if [[ -z $domain ]]; then
+      domain="www.microsoft.com"
+    fi
+
+    echo -e "$yellow netstack: ${netstack} ${none}"
+    echo -e "$yellow 端口 (Port) = ${cyan}${port}${none}"
+    echo -e "$yellow 用户ID (User ID / UUID) = $cyan${uuid}$none"
+    echo -e "$yellow 私钥 (PrivateKey) = ${cyan}${private_key}$none"
+    echo -e "$yellow 公钥 (PublicKey) = ${cyan}${public_key}$none"
+    echo -e "$yellow ShortId = ${cyan}${shortid}$none"
+    echo -e "$yellow SNI = ${cyan}$domain$none"
+    echo "----------------------------------------------------------------"
+fi
+
 pause
 
 # 准备工作
 apt update
 apt install -y curl sudo jq qrencode
-
-# 打开BBR
-sed -i '/net.ipv4.tcp_congestion_control/d' /etc/sysctl.conf
-sed -i '/net.core.default_qdisc/d' /etc/sysctl.conf
-echo "net.ipv4.tcp_congestion_control = bbr" >>/etc/sysctl.conf
-echo "net.core.default_qdisc = fq" >>/etc/sysctl.conf
-sysctl -p >/dev/null 2>&1
 
 # Xray官方脚本 安装 Xray beta 版本
 echo
@@ -48,38 +103,159 @@ echo -e "${yellow}官方脚本安装 Xray beta 版本$none"
 echo "----------------------------------------------------------------"
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install --beta
 
-# 本机IP
+# 打开BBR
 echo
-echo -e "如果你的小鸡是${magenta}双栈(同时有IPv4和IPv6的IP)${none}，请选择你把v2ray搭在哪个'网口'上"
-echo "如果你不懂这段话是什么意思, 请直接回车"
-read -p "$(echo -e "Input ${cyan}4${none} for IPv4, ${cyan}6${none} for IPv6:") " netstack
+echo -e "$yellow打开BBR$none"
+echo "----------------------------------------------------------------"
+sed -i '/net.ipv4.tcp_congestion_control/d' /etc/sysctl.conf
+sed -i '/net.core.default_qdisc/d' /etc/sysctl.conf
+echo "net.ipv4.tcp_congestion_control = bbr" >>/etc/sysctl.conf
+echo "net.core.default_qdisc = fq" >>/etc/sysctl.conf
+sysctl -p >/dev/null 2>&1
 
-if [[ $netstack == "4" ]]; then
-    # ip=$(curl -4s https://api.myip.la)
-    ip=$(curl -4s https://www.cloudflare.com/cdn-cgi/trace | grep ip= | sed -e "s/ip=//g")
-elif [[ $netstack == "6" ]]; then
-    # ip=$(curl -6s https://api.myip.la)
-    ip=$(curl -6s https://www.cloudflare.com/cdn-cgi/trace | grep ip= | sed -e "s/ip=//g")
-else
-    # ip=$(curl -s https://api.myip.la)
-    ip=$(curl -s https://www.cloudflare.com/cdn-cgi/trace | grep ip= | sed -e "s/ip=//g")
+# 配置 VLESS_Reality 模式, 需要:端口, UUID, x25519公私钥, 目标网站
+echo
+echo -e "$yellow配置 VLESS_Reality 模式$none"
+echo "----------------------------------------------------------------"
+
+# 网络栈
+if [[ -z $netstack ]]; then
+  echo
+  echo -e "如果你的小鸡是${magenta}双栈(同时有IPv4和IPv6的IP)${none}，请选择你把v2ray搭在哪个'网口'上"
+  echo "如果你不懂这段话是什么意思, 请直接回车"
+  read -p "$(echo -e "Input ${cyan}4${none} for IPv4, ${cyan}6${none} for IPv6:") " netstack
+
+  # 本机IP
+  if [[ $netstack == "4" ]]; then
+      ip=$(curl -4s https://www.cloudflare.com/cdn-cgi/trace | grep ip= | sed -e "s/ip=//g")
+  elif [[ $netstack == "6" ]]; then
+      ip=$(curl -6s https://www.cloudflare.com/cdn-cgi/trace | grep ip= | sed -e "s/ip=//g")
+  else
+      ip=$(curl -s https://www.cloudflare.com/cdn-cgi/trace | grep ip= | sed -e "s/ip=//g")
+      if [[ -z $(echo -n ${ip} | sed -E 's/([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})//g') ]]; then
+        netstack=4
+      else
+        netstack=6
+      fi      
+  fi
+fi
+
+# 端口
+if [[ -z $port ]]; then
+  default_port=443
+  while :; do
+    read -p "$(echo -e "请输入端口 [${magenta}1-65535${none}] Input port (默认Default ${cyan}${default_port}$none):")" port
+    [ -z "$port" ] && port=$default_port
+    case $port in
+    [1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9] | [1-5][0-9][0-9][0-9][0-9] | 6[0-4][0-9][0-9][0-9] | 65[0-4][0-9][0-9] | 655[0-3][0-5])
+      echo
+      echo
+      echo -e "$yellow 端口 (Port) = ${cyan}${port}${none}"
+      echo "----------------------------------------------------------------"
+      echo
+      break
+      ;;
+    *)
+      error
+      ;;
+    esac
+  done
+fi
+
+# Xray UUID
+if [[ -z $uuid ]]; then
+  default_uuid=$(cat /proc/sys/kernel/random/uuid)
+  while :; do
+    echo -e "请输入 "$yellow"UUID"$none" "
+    read -p "$(echo -e "(默认ID: ${cyan}${default_uuid}$none):")" uuid
+    [ -z "$uuid" ] && uuid=$default_uuid
+    case $(echo -n $uuid | sed -E 's/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}//g') in
+    "")
+        echo
+        echo
+        echo -e "$yellow UUID = $cyan$uuid$none"
+        echo "----------------------------------------------------------------"
+        echo
+        break
+        ;;
+    *)
+        error
+        ;;
+    esac
+  done
 fi
 
 # x25519公私钥
-tmp_key=$(xray x25519)
-private_key=$(echo ${tmp_key} | awk '{print $3}')
-public_key=$(echo ${tmp_key} | awk '{print $6}')
+if [[ -z $private_key ]]; then
+  # 私钥种子
+  private_key=$(echo -n ${uuid} | md5sum | head -c 32 | base64 -w 0 | tr '+/' '-_' | tr -d '=')
 
-# Xray UUID
-xray_id=$(echo $public_key | head -c 16 | xargs xray uuid -i)
+  tmp_key=$(echo -n ${private_key} | xargs xray x25519 -i)
+  default_private_key=$(echo ${tmp_key} | awk '{print $3}')
+  default_public_key=$(echo ${tmp_key} | awk '{print $6}')
+
+  echo -e "请输入 "$yellow"x25519 Private Key"$none" x25519私钥 :"
+  read -p "$(echo -e "(默认私钥 Private Key: ${cyan}${default_private_key}$none):")" private_key
+  if [[ -z "$private_key" ]]; then 
+    private_key=$default_private_key
+    public_key=$default_public_key
+  else
+    tmp_key=$(echo -n ${private_key} | xargs xray x25519 -i)
+    private_key=$(echo ${tmp_key} | awk '{print $3}')
+    public_key=$(echo ${tmp_key} | awk '{print $6}')
+  fi
+
+  echo
+  echo 
+  echo -e "$yellow 私钥 (PrivateKey) = ${cyan}${private_key}$none"
+  echo -e "$yellow 公钥 (PublicKey) = ${cyan}${public_key}$none"
+  echo "----------------------------------------------------------------"
+  echo
+fi
+
+# ShortID
+if [[ -z $shortid ]]; then
+  default_shortid=$(echo -n ${uuid} | sha1sum | head -c 16)
+  while :; do
+    echo -e "请输入 "$yellow"ShortID"$none" :"
+    read -p "$(echo -e "(默认ShortID: ${cyan}${default_shortid}$none):")" shortid
+    [ -z "$shortid" ] && shortid=$default_shortid
+    if [[ ${#shortid} -gt 16 ]]; then
+      error
+      continue
+    elif [[ $(( ${#shortid} % 2 )) -ne 0 ]]; then
+      # 字符串包含奇数个字符
+      error
+      continue
+    else
+      # 字符串包含偶数个字符
+      echo
+      echo
+      echo -e "$yellow ShortID = ${cyan}${shortid}$none"
+      echo "----------------------------------------------------------------"
+      echo
+      break
+    fi
+  done
+fi
 
 # 目标网站
-domain="www.microsoft.com"
+if [[ -z $domain ]]; then
+  echo -e "请输入一个 ${magenta}合适的域名${none} Input the domain"
+  read -p "(例如: www.microsoft.com): " domain
+  [ -z "$domain" ] && domain="www.microsoft.com"
 
-# 指纹 Fingerprint
-fingerprint="random"
+  echo
+  echo
+  echo -e "$yellow SNI = ${cyan}$domain$none"
+  echo "----------------------------------------------------------------"
+  echo
+fi
 
 # 配置config.json
+echo
+echo -e "$yellow 配置 /usr/local/etc/xray/config.json $none"
+echo "----------------------------------------------------------------"
 cat > /usr/local/etc/xray/config.json <<-EOF
 { // VLESS + Reality
   "log": {
@@ -88,12 +264,12 @@ cat > /usr/local/etc/xray/config.json <<-EOF
   "inbounds": [
     {
       "listen": "0.0.0.0",
-      "port": 443,    // ***
+      "port": ${port},    // ***
       "protocol": "vless",
       "settings": {
         "clients": [
           {
-            "id": "$xray_id",    // ***
+            "id": "${uuid}",    // ***
             "flow": "xtls-rprx-vision"
           }
         ],
@@ -104,11 +280,11 @@ cat > /usr/local/etc/xray/config.json <<-EOF
         "security": "reality",
         "realitySettings": {
           "show": false,
-          "dest": "$domain:443",    // ***
+          "dest": "${domain}:443",    // ***
           "xver": 0,
-          "serverNames": ["$domain"],    // ***
-          "privateKey": "$private_key",    // ***私钥
-          "shortIds": [""]    // ***
+          "serverNames": ["${domain}"],    // ***
+          "privateKey": "${private_key}",    // ***私钥
+          "shortIds": ["${shortid}"]    // ***
         }
       },
       "sniffing": {
@@ -196,25 +372,34 @@ echo -e "$yellow重启 Xray$none"
 echo "----------------------------------------------------------------"
 service xray restart
 
+# 指纹FingerPrint
+fingerprint="random"
+
+# SpiderX
+spiderx=""
+
 echo
 echo "---------- Xray 配置信息 -------------"
 echo -e "$green ---提示..这是 VLESS Reality 服务器配置--- $none"
 echo -e "$yellow 地址 (Address) = $cyan${ip}$none"
-echo -e "$yellow 端口 (Port) = ${cyan}443${none}"
-echo -e "$yellow 用户ID (User ID / UUID) = $cyan${xray_id}$none"
+echo -e "$yellow 端口 (Port) = ${cyan}${port}${none}"
+echo -e "$yellow 用户ID (User ID / UUID) = $cyan${uuid}$none"
 echo -e "$yellow 流控 (Flow) = ${cyan}xtls-rprx-vision${none}"
 echo -e "$yellow 加密 (Encryption) = ${cyan}none${none}"
 echo -e "$yellow 传输协议 (Network) = ${cyan}tcp$none"
 echo -e "$yellow 伪装类型 (header type) = ${cyan}none$none"
 echo -e "$yellow 底层传输安全 (TLS) = ${cyan}reality$none"
-echo -e "$yellow SNI = ${cyan}$domain$none"
-echo -e "$yellow 指纹 (Fingerprint) = ${cyan}$fingerprint$none"
+echo -e "$yellow SNI = ${cyan}${domain}$none"
+echo -e "$yellow 指纹 (Fingerprint) = ${cyan}${fingerprint}$none"
 echo -e "$yellow 公钥 (PublicKey) = ${cyan}${public_key}$none"
-echo -e "$yellow ShortId = ${cyan}$none"
-echo -e "$yellow SpiderX = ${cyan}$none"
+echo -e "$yellow ShortId = ${cyan}${shortid}$none"
+echo -e "$yellow SpiderX = ${cyan}${spiderx}$none"
 echo
 echo "---------- VLESS Reality URL ----------"
-vless_reality_url="vless://${xray_id}@${ip}:443?encryption=none&flow=xtls-rprx-vision&security=reality&sni=${domain}&fp=${fingerprint}&pbk=${public_key}&type=tcp#VLESS_R_${ip}"
+if [[ $netstack == "6" ]]; then
+  ip=[$ip]
+fi
+vless_reality_url="vless://${uuid}@${ip}:${port}?flow=xtls-rprx-vision&encryption=none&type=tcp&security=reality&sni=${domain}&fp=${fingerprint}&pbk=${public_key}&sid=${shortid}&spx=${spiderx}&#VLESS_R_${ip}"
 echo -e "${cyan}${vless_reality_url}${none}"
 echo
 sleep 3
