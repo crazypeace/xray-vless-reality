@@ -158,6 +158,21 @@ bash <(curl -L git.io/warp.sh) 4
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove --purge
 ```
 
+# 脚本支持带参数运行
+```
+bash <(curl -L https://github.com/crazypeace/xray-vless-reality/raw/main/install.sh) <netstack> [port] [UUID] [domain]
+```
 
-## 用你的STAR告诉我这个Repo对你有用 Welcome STARs! :)
+其中, 
+
+`netstack` 6 表示 IPv6 入站; 4 表示 IPv4 入站.
+
+`port` 端口. 不写的话, 默认443
+
+`UUID` 你的UUID. 不写的话, 自动生成
+
+`domain` 你指定的网站域名. 不写的话, 默认 www.microsoft.com
+
+
+# 用你的STAR告诉我这个Repo对你有用 Welcome STARs! :)
 [![Stargazers over time](https://starchart.cc/crazypeace/xray-vless-reality.svg)](https://starchart.cc/crazypeace/xray-vless-reality)
