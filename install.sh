@@ -64,17 +64,6 @@ if [ $# -ge 1 ]; then
         uuid=$(cat /proc/sys/kernel/random/uuid)
     fi
 
-    #私钥种子
-    private_key=$(echo -n ${uuid} | md5sum | head -c 32 | base64 -w 0 | tr '+/' '-_' | tr -d '=')
-
-    #生成私钥公钥
-    tmp_key=$(echo -n ${private_key} | xargs xray x25519 -i)
-    private_key=$(echo ${tmp_key} | awk '{print $3}')
-    public_key=$(echo ${tmp_key} | awk '{print $6}')
-
-    #ShortID
-    shortid=$(echo -n ${uuid} | sha1sum | head -c 16)
-
     # 第4个参数是域名
     domain=${4}
     if [[ -z $domain ]]; then
@@ -83,11 +72,8 @@ if [ $# -ge 1 ]; then
 
     echo -e "$yellow netstack: ${netstack} ${none}"
     echo -e "$yellow 端口 (Port) = ${cyan}${port}${none}"
-    echo -e "$yellow 用户ID (User ID / UUID) = $cyan${uuid}$none"
-    echo -e "$yellow 私钥 (PrivateKey) = ${cyan}${private_key}$none"
-    echo -e "$yellow 公钥 (PublicKey) = ${cyan}${public_key}$none"
-    echo -e "$yellow ShortId = ${cyan}${shortid}$none"
-    echo -e "$yellow SNI = ${cyan}$domain$none"
+    echo -e "$yellow 用户ID (User ID / UUID) = $cyan${uuid}${none}"
+    echo -e "$yellow SNI = ${cyan}$domain${none}"
     echo "----------------------------------------------------------------"
 fi
 
@@ -102,6 +88,27 @@ echo
 echo -e "${yellow}官方脚本安装 Xray beta 版本$none"
 echo "----------------------------------------------------------------"
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install --beta
+
+# 如果脚本带参数执行的, 要在安装了xray之后再生成默认私钥公钥shortID
+if [[ -n $uuid ]]; then
+  #私钥种子
+  private_key=$(echo -n ${uuid} | md5sum | head -c 32 | base64 -w 0 | tr '+/' '-_' | tr -d '=')
+
+  #生成私钥公钥
+  tmp_key=$(echo -n ${private_key} | xargs xray x25519 -i)
+  private_key=$(echo ${tmp_key} | awk '{print $3}')
+  public_key=$(echo ${tmp_key} | awk '{print $6}')
+
+  #ShortID
+  shortid=$(echo -n ${uuid} | sha1sum | head -c 16)
+  
+  echo
+  echo "私钥公钥要在安装xray之后才可以生成"
+  echo -e "$yellow 私钥 (PrivateKey) = ${cyan}${private_key}${none}"
+  echo -e "$yellow 公钥 (PublicKey) = ${cyan}${public_key}${none}"
+  echo -e "$yellow ShortId = ${cyan}${shortid}${none}"
+  echo "----------------------------------------------------------------"
+fi
 
 # 打开BBR
 echo
