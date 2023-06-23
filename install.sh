@@ -350,7 +350,7 @@ cat > /usr/local/etc/xray/config.json <<-EOF
 // [routing-rule]
 //{
 //     "type": "field",
-//     "domain": ["geosite:google"],  // ***
+//     "domain": ["geosite:google", "geosite:openai"],  // ***
 //     "outboundTag": "force-ipv6"  // force-ipv6 // force-ipv4 // socks5-warp
 //},
 {
