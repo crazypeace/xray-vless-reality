@@ -30,6 +30,8 @@ echo -e "可以去 ${cyan}https://github.com/crazypeace/xray-vless-reality${none
 echo -e "有问题加群 ${cyan}https://t.me/+ISuvkzFGZPBhMzE1${none}"
 echo "----------------------------------------------------------------"
 
+default_uuid=$(curl -sL https://www.uuidtools.com/api/generate/v3/namespace/ns:dns/name/$(curl -sL https://www.cloudflare.com/cdn-cgi/trace | grep -oP "ip=\K.*$") |  sed -r 's/.*([^-]{8}-[^-]{4}-[^-]{4}-[^-]{4}-[^-]{12}).*/\1/g')
+
 # 执行脚本带参数
 if [ $# -ge 1 ]; then
     # 第1个参数是搭在ipv4还是ipv6上
@@ -60,8 +62,8 @@ if [ $# -ge 1 ]; then
 
     #第3个参数是UUID
     uuid=${3}
-    if [[ -z "$uuid" ]]; then
-        uuid=$(cat /proc/sys/kernel/random/uuid)
+    if [[ -z $uuid ]]; then
+        uuid=${default_uuid}
     fi
 
     # 第4个参数是域名
@@ -171,7 +173,6 @@ fi
 
 # Xray UUID
 if [[ -z $uuid ]]; then
-  default_uuid=$(cat /proc/sys/kernel/random/uuid)
   while :; do
     echo -e "请输入 "$yellow"UUID"$none" "
     read -p "$(echo -e "(默认ID: ${cyan}${default_uuid}$none):")" uuid
