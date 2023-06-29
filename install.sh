@@ -30,7 +30,7 @@ echo -e "可以去 ${cyan}https://github.com/crazypeace/xray-vless-reality${none
 echo -e "有问题加群 ${cyan}https://t.me/+ISuvkzFGZPBhMzE1${none}"
 echo "----------------------------------------------------------------"
 
-default_uuid=$(curl -sL https://www.uuidtools.com/api/generate/v3/namespace/ns:dns/name/$(curl -sL https://www.cloudflare.com/cdn-cgi/trace | grep -oP "ip=\K.*$") |  sed -r 's/.*([^-]{8}-[^-]{4}-[^-]{4}-[^-]{4}-[^-]{12}).*/\1/g')
+default_uuid=$(curl -sL https://www.uuidtools.com/api/generate/v3/namespace/ns:dns/name/$(curl -sL https://www.cloudflare.com/cdn-cgi/trace | grep -oP 'ip=\K.*$')$(cat /proc/sys/kernel/hostname) | grep -oP '[^-]{8}-[^-]{4}-[^-]{4}-[^-]{4}-[^-]{12}')
 
 # 执行脚本带参数
 if [ $# -ge 1 ]; then
@@ -38,14 +38,14 @@ if [ $# -ge 1 ]; then
     case ${1} in
     4)
         netstack=4
-        ip=$(curl -4s https://www.cloudflare.com/cdn-cgi/trace | grep ip= | sed -e "s/ip=//g")
+        ip=$(curl -4s https://www.cloudflare.com/cdn-cgi/trace | grep -oP 'ip=\K.*$')
         ;;
     6)
         netstack=6
-        ip=$(curl -6s https://www.cloudflare.com/cdn-cgi/trace | grep ip= | sed -e "s/ip=//g")
+        ip=$(curl -6s https://www.cloudflare.com/cdn-cgi/trace | grep -oP 'ip=\K.*$')
         ;;    
     *) # initial
-        ip=$(curl -s https://www.cloudflare.com/cdn-cgi/trace | grep ip= | sed -e "s/ip=//g")
+        ip=$(curl -s https://www.cloudflare.com/cdn-cgi/trace | grep -oP 'ip=\K.*$')
         if [[ -z $(echo -n ${ip} | sed -E 's/([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})//g') ]]; then
           netstack=4
         else
@@ -136,11 +136,11 @@ if [[ -z $netstack ]]; then
 
   # 本机IP
   if [[ $netstack == "4" ]]; then
-      ip=$(curl -4s https://www.cloudflare.com/cdn-cgi/trace | grep ip= | sed -e "s/ip=//g")
+      ip=$(curl -4s https://www.cloudflare.com/cdn-cgi/trace | grep -oP 'ip=\K.*$')
   elif [[ $netstack == "6" ]]; then
-      ip=$(curl -6s https://www.cloudflare.com/cdn-cgi/trace | grep ip= | sed -e "s/ip=//g")
+      ip=$(curl -6s https://www.cloudflare.com/cdn-cgi/trace | grep -oP 'ip=\K.*$')
   else
-      ip=$(curl -s https://www.cloudflare.com/cdn-cgi/trace | grep ip= | sed -e "s/ip=//g")
+      ip=$(curl -s https://www.cloudflare.com/cdn-cgi/trace | grep -oP 'ip=\K.*$')
       if [[ -z $(echo -n ${ip} | sed -E 's/([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})//g') ]]; then
         netstack=4
       else
