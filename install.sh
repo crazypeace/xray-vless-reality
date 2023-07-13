@@ -430,7 +430,7 @@ if [[ $netstack == "6" ]]; then
     echo
     echo -e "$yellow这是一个 IPv6 小鸡，用 WARP 创建 IPv4 出站$none"
     echo "Telegram电报是直接访问IPv4地址的, 需要IPv4出站的能力"
-    echo -e "如果WARP安装不顺利, 请在命令行执行${cyan} bash <(curl -L https://github.com/crazypeace/warp.sh/raw/main/warp.sh) 4 ${none}"
+    echo -e "如果WARP安装不顺利, 请在命令行执行${cyan} bash <(curl -L https://ghproxy.crazypeace.workers.dev/https://github.com/crazypeace/warp.sh/raw/main/warp.sh) 4 ${none}"
     echo "----------------------------------------------------------------"
     pause
 
@@ -451,7 +451,7 @@ elif  [[ $netstack == "4" ]]; then
     echo -e "群组: ${cyan} https://t.me/+ISuvkzFGZPBhMzE1 ${none}"
     echo -e "教程: ${cyan} https://zelikk.blogspot.com/2022/03/racknerd-v2ray-cloudflare-warp--ipv6-google-domainstrategy-outboundtag-routing.html ${none}"
     echo -e "视频: ${cyan} https://youtu.be/Yvvm4IlouEk ${none}"
-    echo -e "如果WARP安装不顺利, 请在命令行执行${cyan} bash <(curl -L https://github.com/crazypeace/warp.sh/raw/main/warp.sh) 6 ${none}"
+    echo -e "如果WARP安装不顺利, 请在命令行执行${cyan} bash <(curl -L https://ghproxy.crazypeace.workers.dev/https://github.com/crazypeace/warp.sh/raw/main/warp.sh) 6 ${none}"
     echo "----------------------------------------------------------------"
     pause
 
