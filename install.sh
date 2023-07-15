@@ -70,7 +70,7 @@ if [ $# -ge 1 ]; then
     # 第4个参数是域名
     domain=${4}
     if [[ -z $domain ]]; then
-      domain="www.microsoft.com"
+      domain="learn.microsoft.com"
     fi
 
     echo -e "$yellow netstack: ${netstack} ${none}"
@@ -251,8 +251,8 @@ fi
 # 目标网站
 if [[ -z $domain ]]; then
   echo -e "请输入一个 ${magenta}合适的域名${none} Input the domain"
-  read -p "(例如: www.microsoft.com): " domain
-  [ -z "$domain" ] && domain="www.microsoft.com"
+  read -p "(例如: learn.microsoft.com): " domain
+  [ -z "$domain" ] && domain="learn.microsoft.com"
 
   echo
   echo

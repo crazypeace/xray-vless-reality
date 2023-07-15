@@ -52,7 +52,7 @@ xray uuid
 ```
 
 # 选一个你喜欢的网站 (SNI)
-比如，`www.microsoft.com`
+比如，`learn.microsoft.com`
 
 
 # 选一个你喜欢的指纹 (Fingerprint)
@@ -89,9 +89,9 @@ xray uuid
         "security": "reality",
         "realitySettings": {
           "show": false,
-          "dest": "你喜欢的网站:443",    // ***如 www.microsoft.com:443
+          "dest": "你喜欢的网站:443",    // ***如 learn.microsoft.com:443
           "xver": 0,
-          "serverNames": ["你喜欢的网站"],    //***如 www.microsoft.com
+          "serverNames": ["你喜欢的网站"],    //***如 learn.microsoft.com
           "privateKey": "你的**私钥**",    // ***改这里
           "shortIds": [""]    // 可以留空
         }
@@ -171,14 +171,14 @@ bash <(curl -L https://github.com/crazypeace/xray-vless-reality/raw/main/install
 
 `UUID` 你的UUID. 不写的话, 自动生成
 
-`domain` 你指定的网站域名. 不写的话, 默认 www.microsoft.com
+`domain` 你指定的网站域名. 不写的话, 默认 learn.microsoft.com
 
 例如,
 ```
 bash <(curl -L https://github.com/crazypeace/xray-vless-reality/raw/main/install.sh) 6
 bash <(curl -L https://github.com/crazypeace/xray-vless-reality/raw/main/install.sh) 6 443
 bash <(curl -L https://github.com/crazypeace/xray-vless-reality/raw/main/install.sh) 6 443 1b0b723f-0544-4f9c-8df8-2b8975c5e47a
-bash <(curl -L https://github.com/crazypeace/xray-vless-reality/raw/main/install.sh) 6 443 1b0b723f-0544-4f9c-8df8-2b8975c5e47a www.microsoft.com
+bash <(curl -L https://github.com/crazypeace/xray-vless-reality/raw/main/install.sh) 6 443 1b0b723f-0544-4f9c-8df8-2b8975c5e47a learn.microsoft.com
 ```
 
 
