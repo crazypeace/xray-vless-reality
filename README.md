@@ -160,7 +160,7 @@ bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release
 
 # 脚本支持带参数运行
 ```
-bash <(curl -L https://github.com/crazypeace/xray-vless-reality/raw/main/install.sh) <netstack> [port] [UUID] [domain]
+bash <(curl -L https://github.com/crazypeace/xray-vless-reality/raw/main/install.sh) <netstack> [port] [domain] [UUID]
 ```
 
 其中, 
@@ -169,16 +169,16 @@ bash <(curl -L https://github.com/crazypeace/xray-vless-reality/raw/main/install
 
 `port` 端口. 不写的话, 默认443
 
-`UUID` 你的UUID. 不写的话, 自动生成
-
 `domain` 你指定的网站域名. 不写的话, 默认 learn.microsoft.com
+
+`UUID` 你的UUID. 不写的话, 自动生成
 
 例如,
 ```
 bash <(curl -L https://github.com/crazypeace/xray-vless-reality/raw/main/install.sh) 6
 bash <(curl -L https://github.com/crazypeace/xray-vless-reality/raw/main/install.sh) 6 443
-bash <(curl -L https://github.com/crazypeace/xray-vless-reality/raw/main/install.sh) 6 443 1b0b723f-0544-4f9c-8df8-2b8975c5e47a
-bash <(curl -L https://github.com/crazypeace/xray-vless-reality/raw/main/install.sh) 6 443 1b0b723f-0544-4f9c-8df8-2b8975c5e47a learn.microsoft.com
+bash <(curl -L https://github.com/crazypeace/xray-vless-reality/raw/main/install.sh) 6 443 learn.microsoft.com
+bash <(curl -L https://github.com/crazypeace/xray-vless-reality/raw/main/install.sh) 6 443 learn.microsoft.com 1b0b723f-0544-4f9c-8df8-2b8975c5e47a
 ```
 
 

@@ -55,22 +55,22 @@ if [ $# -ge 1 ]; then
         ;;    
     esac
 
-    #第2个参数是port
+    # 第2个参数是port
     port=${2}
     if [[ -z $port ]]; then
       port=443
     fi
 
-    #第3个参数是UUID
-    uuid=${3}
-    if [[ -z $uuid ]]; then
-        uuid=${default_uuid}
-    fi
-
-    # 第4个参数是域名
-    domain=${4}
+    # 第3个参数是域名
+    domain=${3}
     if [[ -z $domain ]]; then
       domain="learn.microsoft.com"
+    fi
+
+    # 第4个参数是UUID
+    uuid=${4}
+    if [[ -z $uuid ]]; then
+        uuid=${default_uuid}
     fi
 
     echo -e "$yellow netstack: ${netstack} ${none}"
