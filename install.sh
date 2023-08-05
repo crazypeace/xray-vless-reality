@@ -268,6 +268,8 @@ echo "----------------------------------------------------------------"
 cat > /usr/local/etc/xray/config.json <<-EOF
 { // VLESS + Reality
   "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
     "loglevel": "warning"
   },
   "inbounds": [
