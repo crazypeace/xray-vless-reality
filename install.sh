@@ -86,11 +86,11 @@ pause
 apt update
 apt install -y curl sudo jq qrencode
 
-# Xray官方脚本 安装 Xray v1.8.3 版本
+# Xray官方脚本 安装最新版本
 echo
-echo -e "${yellow}官方脚本安装 Xray v1.8.3 版本$none"
+echo -e "${yellow}官方脚本安装最新版本$none"
 echo "----------------------------------------------------------------"
-bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install --version 1.8.3
+bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
 
 # 如果脚本带参数执行的, 要在安装了xray之后再生成默认私钥公钥shortID
 if [[ -n $uuid ]]; then
