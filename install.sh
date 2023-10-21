@@ -92,6 +92,9 @@ echo -e "${yellow}官方脚本安装最新版本$none"
 echo "----------------------------------------------------------------"
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
 
+# 更新 geodata
+bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install-geodata
+
 # 如果脚本带参数执行的, 要在安装了xray之后再生成默认私钥公钥shortID
 if [[ -n $uuid ]]; then
   #私钥种子
