@@ -134,7 +134,7 @@ echo "----------------------------------------------------------------"
 # 网络栈
 if [[ -z $netstack ]]; then
   echo
-  echo -e "如果你的小鸡是${magenta}双栈(同时有IPv4和IPv6的IP)${none}，请选择你把v2ray搭在哪个'网口'上"
+  echo -e "如果你的小鸡是${magenta}双栈(同时有IPv4和IPv6的IP)${none}，请选择你把Xray搭在哪个'网口'上"
   echo "如果你不懂这段话是什么意思, 请直接回车"
   read -p "$(echo -e "Input ${cyan}4${none} for IPv4, ${cyan}6${none} for IPv6:") " netstack
 
