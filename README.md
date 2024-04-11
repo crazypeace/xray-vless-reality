@@ -160,8 +160,7 @@ bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release
 
 # 私货
 对于喜欢V2rayN PAC模式的朋友，欢迎使用支持Reality的 [v2rayN-3.29-VLESS](https://github.com/crazypeace/v2rayN-3.29-VLESS)
-![v2rayN_2022-07-20_22-02-43](https://user-images.githubusercontent.com/665889/180002616-c2c6da3c-78b0-4f46-8fa9-34021590646f.png)
-
+![image](https://github.com/crazypeace/xray-vless-reality/assets/665889/c45c11a1-e326-4c70-9c55-8ec45608c472)
 
 # 脚本支持带参数运行
 ```
