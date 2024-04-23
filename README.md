@@ -32,10 +32,10 @@ sysctl -p >/dev/null 2>&1
 ```
 
 
-# 安装Xray beta版本
+# 安装Xray
 source: https://github.com/XTLS/Xray-install
 ```
-bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install --beta
+bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
 ```
 
 
