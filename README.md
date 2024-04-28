@@ -19,8 +19,9 @@ bash <(curl -L https://github.com/crazypeace/xray-vless-reality/raw/main/install
 
 脚本中很大部分都是在校验用户的输入。其实照着下面的步骤自己配置就行了。
 
+# 具体手搓步骤 (点击展开)
 <details>
-    <summary>具体手搓步骤 (点击展开)</summary>
+    <summary>(点击展开)</summary>
 
 # 打开BBR
 ```
