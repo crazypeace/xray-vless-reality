@@ -139,17 +139,31 @@ if [[ -z $netstack ]]; then
   read -p "$(echo -e "Input ${cyan}4${none} for IPv4, ${cyan}6${none} for IPv6:") " netstack
 
   # 本机IP
+  InFaces=($(ifconfig -s | awk '{print $1}' | grep -E '^(eth|ens|eno|esp|enp|venet|vif)'))  #找所有的网口
+
+  for i in "${InFaces[@]}"; do  # 从网口循环获取IP
+    Public_IPv4=$(curl -4s --interface "$i" https://www.cloudflare.com/cdn-cgi/trace | grep -oP "ip=\K.*$")
+    Public_IPv6=$(curl -6s --interface "$i" https://www.cloudflare.com/cdn-cgi/trace | grep -oP "ip=\K.*$")
+
+    if [[ -n "$Public_IPv4" || -n "$Public_IPv6" ]]; then  # 检查是否获取到IP地址
+      IPv4="$Public_IPv4"
+      IPv6="$Public_IPv6"
+      break  # 获取到任一IP类型停止循环
+    fi
+  done
+
   if [[ $netstack == "4" ]]; then
-      ip=$(curl -4s https://www.cloudflare.com/cdn-cgi/trace | grep -oP 'ip=\K.*$')
+    ip=$IPv4
   elif [[ $netstack == "6" ]]; then
-      ip=$(curl -6s https://www.cloudflare.com/cdn-cgi/trace | grep -oP 'ip=\K.*$')
+    ip=$IPv6
   else
-      ip=$(curl -s https://www.cloudflare.com/cdn-cgi/trace | grep -oP 'ip=\K.*$')
-      if [[ -z $(echo -n ${ip} | sed -E 's/([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})//g') ]]; then
-        netstack=4
-      else
-        netstack=6
-      fi      
+    if [[ -n "$IPv4" ]]; then
+      ip=$IPv4
+      netstack=4
+    elif [[ -n "$IPv6" ]]; then
+      ip=$IPv6
+      netstack=6
+    fi
   fi
 fi
 
