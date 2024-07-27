@@ -374,16 +374,16 @@ cat > /usr/local/etc/xray/config.json <<-EOF
 //     "domain": ["geosite:google", "geosite:openai"],  // ***
 //     "outboundTag": "force-ipv6"  // force-ipv6 // force-ipv4 // socks5-warp
 //},
-{
-     "type": "field",
-     "domain": ["geosite:cn"],  // ***
-     "outboundTag": "force-ipv6"  // force-ipv6 // force-ipv4 // socks5-warp // blocked
-},
-{
-     "type": "field",
-     "ip": ["geoip:cn"],  // ***
-     "outboundTag": "force-ipv6"  // force-ipv6 // force-ipv4 // socks5-warp // blocked
-},
+//{
+//     "type": "field",
+//     "domain": ["geosite:cn"],  // ***
+//     "outboundTag": "force-ipv6"  // force-ipv6 // force-ipv4 // socks5-warp // blocked
+//},
+//{
+//     "type": "field",
+//     "ip": ["geoip:cn"],  // ***
+//     "outboundTag": "force-ipv6"  // force-ipv6 // force-ipv4 // socks5-warp // blocked
+//},
       {
         "type": "field",
         "ip": ["geoip:private"],
