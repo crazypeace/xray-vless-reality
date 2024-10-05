@@ -88,7 +88,7 @@ apt install -y curl sudo jq qrencode
 
 # Xray官方脚本 安装最新版本
 echo
-echo -e "${yellow}官方脚本安装最新版本$none"
+echo -e "${yellow}Xray官方脚本安装最新版本$none"
 echo "----------------------------------------------------------------"
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
 
