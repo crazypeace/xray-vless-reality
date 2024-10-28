@@ -290,6 +290,23 @@ cat > /usr/local/etc/xray/config.json <<-EOF
     "loglevel": "warning"
   },
   "inbounds": [
+    // [inbound] 如果你想使用其它翻墙服务端如(HY2或者NaiveProxy)对接v2ray的分流规则, 那么取消下面一段的注释, 并让其它翻墙服务端接到下面这个socks 1080端口
+    // {
+    //     "listen":"127.0.0.1",
+    //     "port":1080,
+    //     "protocol":"socks",
+    //     "sniffing":{
+    //         "enabled":true,
+    //         "destOverride":[
+    //             "http",
+    //             "tls"
+    //         ]
+    //     },
+    //     "settings":{
+    //         "auth":"noauth",
+    //         "udp":false
+    //     }
+    // },
     {
       "listen": "0.0.0.0",
       "port": ${port},    // ***
