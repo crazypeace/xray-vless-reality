@@ -29,9 +29,6 @@ echo -e "可以去 ${cyan}https://github.com/crazypeace/xray-vless-reality${none
 echo -e "有问题加群 ${cyan}https://t.me/+ISuvkzFGZPBhMzE1${none}"
 echo "----------------------------------------------------------------"
 
-uuidSeed=$(curl -sL https://www.cloudflare.com/cdn-cgi/trace | grep -oP 'ip=\K.*$')$(cat /proc/sys/kernel/hostname)$(cat /etc/timezone)
-default_uuid=$(curl -sL https://www.uuidtools.com/api/generate/v3/namespace/ns:dns/name/${uuidSeed} | grep -oP '[^-]{8}-[^-]{4}-[^-]{4}-[^-]{4}-[^-]{12}')
-
 # 本机 IP
 InFaces=($(ifconfig -s | awk '{print $1}' | grep -E '^(eth|ens|eno|esp|enp|venet|vif)'))  #找所有的网口
 
@@ -46,6 +43,9 @@ for i in "${InFaces[@]}"; do  # 从网口循环获取IP
         IPv6="$Public_IPv6"
     fi
 done
+
+uuidSeed=${IPv4}${IPv6}$(cat /proc/sys/kernel/hostname)$(cat /etc/timezone)
+default_uuid=$(curl -sL https://www.uuidtools.com/api/generate/v3/namespace/ns:dns/name/${uuidSeed} | grep -oP '[^-]{8}-[^-]{4}-[^-]{4}-[^-]{4}-[^-]{12}')
 
 # 执行脚本带参数
 if [ $# -ge 1 ]; then
@@ -102,7 +102,7 @@ pause
 
 # 准备工作
 apt update
-apt install -y curl sudo jq qrencode
+apt install -y curl sudo jq qrencode net-tools lsof
 
 # Xray官方脚本 安装最新版本
 echo
