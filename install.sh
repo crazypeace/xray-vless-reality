@@ -33,8 +33,8 @@ echo "----------------------------------------------------------------"
 InFaces=($(ifconfig -s | awk '{print $1}' | grep -E '^(eth|ens|eno|esp|enp|venet|vif)'))  #找所有的网口
 
 for i in "${InFaces[@]}"; do  # 从网口循环获取IP
-    Public_IPv4=$(curl -4s --interface "$i" https://www.cloudflare.com/cdn-cgi/trace | grep -oP "ip=\K.*$")
-    Public_IPv6=$(curl -6s --interface "$i" https://www.cloudflare.com/cdn-cgi/trace | grep -oP "ip=\K.*$")
+    Public_IPv4=$(curl -4s --interface "$i" --max-time 2 https://www.cloudflare.com/cdn-cgi/trace | grep -oP "ip=\K.*$")
+    Public_IPv6=$(curl -6s --interface "$i" --max-time 2 https://www.cloudflare.com/cdn-cgi/trace | grep -oP "ip=\K.*$")
 
     if [[ -n "$Public_IPv4" ]]; then  # 检查是否获取到IP地址
         IPv4="$Public_IPv4"
