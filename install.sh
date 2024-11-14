@@ -64,10 +64,10 @@ if [ $# -ge 1 ]; then
         ip=${IPv6}
         ;;
     *) # initial
-        if [[ -n "$Public_IPv4" ]]; then  # 检查是否获取到IP地址
+        if [[ -n "$IPv4" ]]; then  # 检查是否获取到IP地址
             netstack=4
             ip=${IPv4}
-        elif [[ -n "$Public_IPv6" ]]; then  # 检查是否获取到IP地址            
+        elif [[ -n "$IPv6" ]]; then  # 检查是否获取到IP地址            
             netstack=6
             ip=${IPv6}
         else
