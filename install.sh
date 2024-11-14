@@ -48,6 +48,9 @@ done
 uuidSeed=${IPv4}${IPv6}$(cat /proc/sys/kernel/hostname)$(cat /etc/timezone)
 default_uuid=$(curl -sL https://www.uuidtools.com/api/generate/v3/namespace/ns:dns/name/${uuidSeed} | grep -oP '[^-]{8}-[^-]{4}-[^-]{4}-[^-]{4}-[^-]{12}')
 
+# 如果你想使用纯随机的UUID
+# default_uuid=$(cat /proc/sys/kernel/random/uuid)
+
 # 执行脚本带参数
 if [ $# -ge 1 ]; then
     # 第1个参数是搭在ipv4还是ipv6上
