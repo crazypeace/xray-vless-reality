@@ -94,8 +94,8 @@ if [ $# -ge 1 ]; then
         uuid=${default_uuid}
     fi
 
-    echo -e "$yellow netstack: ${cyan}${netstack}${none}"
-    echo -e "$yellow 本机IP: ${cyan}${ip}${none}"
+    echo -e "$yellow netstack = ${cyan}${netstack}${none}"
+    echo -e "$yellow 本机IP = ${cyan}${ip}${none}"
     echo -e "$yellow 端口 (Port) = ${cyan}${port}${none}"
     echo -e "$yellow 用户ID (User ID / UUID) = $cyan${uuid}${none}"
     echo -e "$yellow SNI = ${cyan}$domain${none}"
