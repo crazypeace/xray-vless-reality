@@ -27,7 +27,7 @@ echo
 echo -e "$yellow此脚本仅兼容于Debian 10+系统. 如果你的系统不符合,请Ctrl+C退出脚本$none"
 echo -e "可以去 ${cyan}https://github.com/crazypeace/xray-vless-reality${none} 查看脚本整体思路和关键命令, 以便针对你自己的系统做出调整."
 echo -e "有问题加群 ${cyan}https://t.me/+ISuvkzFGZPBhMzE1${none}"
-echo -e "本脚本支持带参数执行, 省略交互验证过程, 详见GitHub."
+echo -e "本脚本支持带参数执行, 省略交互过程, 详见GitHub."
 echo "----------------------------------------------------------------"
 
 # 本机 IP
