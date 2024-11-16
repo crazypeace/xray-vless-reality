@@ -173,6 +173,8 @@ if [[ -z $netstack ]]; then
     elif [[ -n "$IPv6" ]]; then
       ip=${IPv6}
       netstack=6
+    else
+      warn "没有获取到公共IP"
     fi
   fi
 fi
