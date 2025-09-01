@@ -121,15 +121,18 @@ bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release
 
 # 如果脚本带参数执行的, 要在安装了xray之后再生成默认私钥公钥shortID
 if [[ -n $uuid ]]; then
-  #私钥种子
-  private_key=$(echo -n ${uuid} | md5sum | head -c 32 | base64 -w 0 | tr '+/' '-_' | tr -d '=')
+  # 私钥种子
+  # x25519对私钥有一定要求, 不是任意随机的都满足要求, 所以下面这个字符串只能当作种子看待
+  reality_key_seed=$(echo -n ${uuid} | md5sum | head -c 32 | base64 -w 0 | tr '+/' '-_' | tr -d '=')
 
-  #生成私钥公钥
-  tmp_key=$(echo -n ${private_key} | xargs xray x25519 -i)
+  # 生成私钥公钥
+  # xray x25519 如果接收一个合法的私钥, 会生成对应的公钥. 如果接收一个非法的私钥, 会先"修正"为合法的私钥. 这个"修正"的过程, 会修改其中的一些字节
+  # https://github.dev/XTLS/Xray-core/blob/6830089d3c42483512842369c908f9de75da2eaa/main/commands/all/curve25519.go#L36
+  tmp_key=$(echo -n ${reality_key_seed} | xargs xray x25519 -i)
   private_key=$(echo ${tmp_key} | awk 'NR==1 {print $NF}')
   public_key=$(echo ${tmp_key} | awk 'NR==2 {print $NF}')
 
-  #ShortID
+  # ShortID
   shortid=$(echo -n ${uuid} | sha1sum | head -c 16)
   
   echo
@@ -226,9 +229,13 @@ fi
 # x25519公私钥
 if [[ -z $private_key ]]; then
   # 私钥种子
-  private_key=$(echo -n ${uuid} | md5sum | head -c 32 | base64 -w 0 | tr '+/' '-_' | tr -d '=')
+  # x25519对私钥有一定要求, 不是任意随机的都满足要求, 所以下面这个字符串只能当作种子看待
+  reality_key_seed=$(echo -n ${uuid} | md5sum | head -c 32 | base64 -w 0 | tr '+/' '-_' | tr -d '=')
 
-  tmp_key=$(echo -n ${private_key} | xargs xray x25519 -i)
+  # 生成私钥公钥
+  # xray x25519 如果接收一个合法的私钥, 会生成对应的公钥. 如果接收一个非法的私钥, 会先"修正"为合法的私钥. 这个"修正"的过程, 会修改其中的一些字节
+  # https://github.dev/XTLS/Xray-core/blob/6830089d3c42483512842369c908f9de75da2eaa/main/commands/all/curve25519.go#L36
+  tmp_key=$(echo -n ${reality_key_seed} | xargs xray x25519 -i)
   default_private_key=$(echo ${tmp_key} | awk 'NR==1 {print $NF}')
   default_public_key=$(echo ${tmp_key} | awk 'NR==2 {print $NF}')
 
