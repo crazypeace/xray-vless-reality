@@ -126,8 +126,8 @@ if [[ -n $uuid ]]; then
 
   #生成私钥公钥
   tmp_key=$(echo -n ${private_key} | xargs xray x25519 -i)
-  private_key=$(echo ${tmp_key} | awk '{print $3}')
-  public_key=$(echo ${tmp_key} | awk '{print $6}')
+  private_key=$(echo ${tmp_key} | awk 'NR==1 {print $NF}')
+  public_key=$(echo ${tmp_key} | awk 'NR==2 {print $NF}')
 
   #ShortID
   shortid=$(echo -n ${uuid} | sha1sum | head -c 16)
@@ -229,8 +229,8 @@ if [[ -z $private_key ]]; then
   private_key=$(echo -n ${uuid} | md5sum | head -c 32 | base64 -w 0 | tr '+/' '-_' | tr -d '=')
 
   tmp_key=$(echo -n ${private_key} | xargs xray x25519 -i)
-  default_private_key=$(echo ${tmp_key} | awk '{print $3}')
-  default_public_key=$(echo ${tmp_key} | awk '{print $6}')
+  default_private_key=$(echo ${tmp_key} | awk 'NR==1 {print $NF}')
+  default_public_key=$(echo ${tmp_key} | awk 'NR==2 {print $NF}')
 
   echo -e "请输入 "$yellow"x25519 Private Key"$none" x25519私钥 :"
   read -p "$(echo -e "(默认私钥 Private Key: ${cyan}${default_private_key}$none):")" private_key
@@ -239,8 +239,8 @@ if [[ -z $private_key ]]; then
     public_key=$default_public_key
   else
     tmp_key=$(echo -n ${private_key} | xargs xray x25519 -i)
-    private_key=$(echo ${tmp_key} | awk '{print $3}')
-    public_key=$(echo ${tmp_key} | awk '{print $6}')
+    private_key=$(echo ${tmp_key} | awk 'NR==1 {print $NF}')
+    public_key=$(echo ${tmp_key} | awk 'NR==2 {print $NF}')
   fi
 
   echo
