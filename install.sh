@@ -129,8 +129,8 @@ if [[ -n $uuid ]]; then
   # xray x25519 如果接收一个合法的私钥, 会生成对应的公钥. 如果接收一个非法的私钥, 会先"修正"为合法的私钥. 这个"修正"的过程, 会修改其中的一些字节
   # https://github.dev/XTLS/Xray-core/blob/6830089d3c42483512842369c908f9de75da2eaa/main/commands/all/curve25519.go#L36
   tmp_key=$(echo -n ${reality_key_seed} | xargs xray x25519 -i)
-  private_key=$(echo ${tmp_key} | awk 'NR==1 {print $NF}')
-  public_key=$(echo ${tmp_key} | awk 'NR==2 {print $NF}')
+  private_key=$(echo ${tmp_key} | awk '{print $2}')
+  public_key=$(echo ${tmp_key} | awk '{print $4}')
 
   # ShortID
   shortid=$(echo -n ${uuid} | sha1sum | head -c 16)
@@ -236,9 +236,9 @@ if [[ -z $private_key ]]; then
   # xray x25519 如果接收一个合法的私钥, 会生成对应的公钥. 如果接收一个非法的私钥, 会先"修正"为合法的私钥. 这个"修正"的过程, 会修改其中的一些字节
   # https://github.dev/XTLS/Xray-core/blob/6830089d3c42483512842369c908f9de75da2eaa/main/commands/all/curve25519.go#L36
   tmp_key=$(echo -n ${reality_key_seed} | xargs xray x25519 -i)
-  default_private_key=$(echo ${tmp_key} | awk 'NR==1 {print $NF}')
-  default_public_key=$(echo ${tmp_key} | awk 'NR==2 {print $NF}')
-
+  default_private_key=$(echo ${tmp_key} | awk '{print $2}')
+  default_public_key=$(echo ${tmp_key} | awk '{print $4}')
+  
   echo -e "请输入 "$yellow"x25519 Private Key"$none" x25519私钥 :"
   read -p "$(echo -e "(默认私钥 Private Key: ${cyan}${default_private_key}$none):")" private_key
   if [[ -z "$private_key" ]]; then 
@@ -246,8 +246,8 @@ if [[ -z $private_key ]]; then
     public_key=$default_public_key
   else
     tmp_key=$(echo -n ${private_key} | xargs xray x25519 -i)
-    private_key=$(echo ${tmp_key} | awk 'NR==1 {print $NF}')
-    public_key=$(echo ${tmp_key} | awk 'NR==2 {print $NF}')
+    private_key=$(echo ${tmp_key} | awk '{print $2}')
+    public_key=$(echo ${tmp_key} | awk '{print $4}')
   fi
 
   echo
