@@ -518,3 +518,5 @@ elif  [[ $netstack == "4" ]]; then
     service xray restart
 
 fi
+
+echo "节点信息保存在 ~/_vless_reality_url_ 中"
