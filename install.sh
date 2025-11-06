@@ -111,7 +111,7 @@ pause
 
 # 准备工作
 apt update
-apt install -y sudo jq qrencode net-tools lsof
+apt install -y curl wget sudo jq qrencode net-tools lsof
 
 # Xray官方脚本 安装最新版本
 echo
