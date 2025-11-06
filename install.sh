@@ -23,7 +23,7 @@ pause() {
 }
 
 # 确保有 curl 和 wget
-apt install -y curl wget
+apt-get -y install curl wget -qq
 
 # 说明
 echo
