@@ -492,7 +492,8 @@ if [[ $netstack == "6" ]]; then
     pause
 
     # 安装 WARP IPv4
-    bash <(curl -L https://gitlab.com/fscarmen/warp/-/raw/main/menu.sh) 4
+    curl -LO https://gitlab.com/fscarmen/warp/-/raw/main/menu.sh
+    yes "" | bash menu.sh 4
 
     # 重启 Xray
     echo
@@ -512,7 +513,8 @@ elif  [[ $netstack == "4" ]]; then
     pause
 
     # 安装 WARP IPv6
-    bash <(curl -L https://gitlab.com/fscarmen/warp/-/raw/main/menu.sh) 6
+    curl -LO https://gitlab.com/fscarmen/warp/-/raw/main/menu.sh
+    yes "" | bash menu.sh 6
 
     # 重启 Xray
     echo
